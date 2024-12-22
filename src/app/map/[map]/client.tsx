@@ -3,12 +3,35 @@ import "@xyflow/react/dist/style.css";
 import "@/styles/mapCss.css";
 import { useRouter } from "next/navigation";
 import { Background, Controls, Panel, ReactFlow } from "@xyflow/react";
+import { shallow } from "zustand/shallow"
+import { useMemo } from "react";
+
 import { Button } from "@/components/ui/button";
+import useStore, { type MindmapState } from "./_/store";
+import MindmapNode from "./_/mindmapNode";
+
+const selector = (state: MindmapState) => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+});
+const nodeTypes = { mindmap: MindmapNode }
 
 export default function MapPageClient({ page }: { page: string }) {
+  const { nodes, edges, onEdgesChange, onNodesChange } = useStore(selector, shallow)
+
+
   return (
     <main className="h-full w-full">
-      <ReactFlow>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        nodeTypes={nodeTypes}
+        fitView
+      >
         <Header page={page} />
         <Background />
         <Controls showInteractive={false} />
