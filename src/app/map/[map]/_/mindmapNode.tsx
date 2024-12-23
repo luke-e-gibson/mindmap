@@ -7,8 +7,8 @@ export type NodeData = {
 function MindmapNode({ id, data }: NodeProps<Node<NodeData>>) {
   return (
       <div className="p-1">
-          <div className="border rounded p-1 bg-white">
-              <input defaultValue={data.label}/>
+          <div className="border rounded p-1 bg-white dark:bg-neutral-900">
+              <input className="dark:bg-neutral-900" defaultValue={data.label}/>
           </div>
           <Handle type="target" position={Position.Top} />
           <Handle type="source" position={Position.Bottom} />

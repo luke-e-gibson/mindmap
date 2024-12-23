@@ -7,14 +7,16 @@ import {
   applyNodeChanges,
   NodeChange,
   EdgeChange,
-  applyEdgeChanges,
+  applyEdgeChanges, XYPosition,
 } from "@xyflow/react";
+import {nanoid} from "nanoid";
 
 export type MindmapState = {
   nodes: Node[];
   edges: Edge[];
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
+  addChildNodes: (parentNode: Node, position: XYPosition) => void;
 };
 
 const useStore = createWithEqualityFn<MindmapState>((set, get) => ({
@@ -37,6 +39,26 @@ const useStore = createWithEqualityFn<MindmapState>((set, get) => ({
       edges: applyEdgeChanges(change, get().edges),
     });
   },
+  addChildNodes: (parentNode: Node, position: XYPosition) => {
+      const newNode: Node = {
+        id: nanoid(),
+        type: 'mindmap',
+        data: { label: "New Node" },
+        position: { x: position.x, y: position.y },
+        parentId: parentNode.id,
+      }
+
+      const newEdge: Edge = {
+        id: nanoid(),
+        source: parentNode.id,
+        target: newNode.id,
+      }
+
+      set({
+        nodes: [...get().nodes, newNode],
+        edges: [...get().edges, newEdge],
+      })
+  }
 }));
 
 export default useStore;
